@@ -1,26 +1,39 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Button } from 'react-native';
-import { useTheme } from '../components/ThemeContext'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const StudentProfile = () => {
-  const { isDarkTheme } = useTheme(); 
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+
+  useEffect(() => {
+    const loadTheme = async () => {
+      try {
+        const savedTheme = await AsyncStorage.getItem('isDarkTheme');
+        setIsDarkTheme(savedTheme === 'true');
+      } catch (error) {
+        console.error('Failed to load theme:', error);
+      }
+    };
+
+    loadTheme();
+  }, []);
 
   return (
     <ScrollView contentContainerStyle={[styles.container, { backgroundColor: isDarkTheme ? '#333' : '#fff' }]}>
       <View style={styles.profileContainer}>
         <Image
-          source={{ uri: 'https://via.placeholder.com/150' }} // Replace with student's image URL
+          source={{ uri: 'https://via.placeholder.com/150' }}
           style={styles.profileImage}
         />
         <Text style={[styles.name, { color: isDarkTheme ? '#fff' : '#000' }]}>Jane Smith</Text>
-        <Text style={[styles.year, { color: isDarkTheme ? '#ccc' : '#000' }]}>Year: 2nd Year, B.Tech</Text>
+        <Text style={[styles.year, { color: isDarkTheme ? '#ccc' : '#000' }]}>Year: 3rd Year, B.Tech</Text>
         <Text style={[styles.interests, { color: isDarkTheme ? '#ccc' : '#000' }]}>Interests: AI, Web Development</Text>
         <Text style={[styles.goals, { color: isDarkTheme ? '#ccc' : '#000' }]}>
           Aspiring to become a full-stack developer with a focus on AI-driven applications.
         </Text>
         <Button 
           title="Connect with a Mentor" 
-          color={isDarkTheme ? '#30e3ca' : '#007bff'} // Adjust color based on theme
+          color={isDarkTheme ? '#30e3ca' : '#30e3ca'}
           onPress={() => {}}
         />
       </View>

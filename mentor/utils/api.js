@@ -9,7 +9,7 @@ export const getMentors = async (filters = {}) => {
   try {
     const mentorsRef = collection(db, '/users');
     let q = query(mentorsRef);
-
+   console.log(q);
     // Apply dynamic filters
     if (filters.field) {
       q = query(mentorsRef, where('field', '==', filters.field));

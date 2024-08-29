@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Home from './screens/Homepage';
 import Settings from './screens/Settings';
 import Notification from './screens/notification';
 import Assistant from './screens/Assistant';
-import MentorProfile from './screens/MentorProfile';
+import StudentProfile from './screens/StudentProfile';
 import { ThemeContext } from './components/ThemeContext'
 
 const Tabs = createBottomTabNavigator();
@@ -44,7 +44,7 @@ function TabGroup() {
       })}
     >
       <Tabs.Screen name="Home" component={Home} />
-      <Tabs.Screen name="Profile" component={MentorProfile} />
+      <Tabs.Screen name="Profile" component={StudentProfile} />
       <Tabs.Screen name="Assistant" component={Assistant} />
       <Tabs.Screen name="notifications" component={Notification} />
       <Tabs.Screen name="Settings" component={Settings} />
