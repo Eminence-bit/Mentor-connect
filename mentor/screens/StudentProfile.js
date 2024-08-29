@@ -1,0 +1,65 @@
+// StudentProfile.js
+import React from 'react';
+import { View, Text, Image, StyleSheet, ScrollView, Button } from 'react-native';
+
+const StudentProfile = () => {
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.profileContainer}>
+        <Image
+          source={{ uri: 'https://via.placeholder.com/150' }} // Replace with student's image URL
+          style={styles.profileImage}
+        />
+        <Text style={styles.name}>Jane Smith</Text>
+        <Text style={styles.year}>Year: 2nd Year, B.Tech</Text>
+        <Text style={styles.interests}>Interests: AI, Web Development</Text>
+        <Text style={styles.goals}>
+          Aspiring to become a full-stack developer with a focus on AI-driven applications.
+        </Text>
+        <Button title="Connect with a Mentor" onPress={() => {}} />
+      </View>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    padding: 20,
+    backgroundColor: '#fff',
+  },
+  profileContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  profileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    marginBottom: 20,
+  },
+  Button:{
+    color:"#30e3ca",
+  },
+  name: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  year: {
+    fontSize: 18,
+    marginBottom: 5,
+  },
+  interests: {
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  goals: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 20,
+    paddingHorizontal: 10,
+  },
+});
+
+export default StudentProfile;
