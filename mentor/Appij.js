@@ -1,10 +1,10 @@
 import "react-native-gesture-handler";
-import { ThemeProvider } from "@react-navigation/native";
 import Navigation from "./navigation";
+import { ThemeProvider } from "./components/ThemeContext";
 
 export default function Appij() {
   return (
-  <ThemeProvider>
+    <ThemeProvider>
     <Navigation />
     </ThemeProvider>
     );

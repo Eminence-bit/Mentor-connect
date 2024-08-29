@@ -1,14 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, Button, FlatList, StyleSheet, ActivityIndicator} from 'react-native';
 import { getMentors, bookSession } from '../utils/api';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Home = () => {
   const [mentors, setMentors] = useState([]);
-  const [filters, setFilters] = useState({ field: '', experience: ''});
+  const [filters, setFilters] = useState({ field: '', experience: '' });
   const [loading, setLoading] = useState(false);
   const [selectedMentor, setSelectedMentor] = useState(null);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const loadTheme = async () => {
+      try {
+        const savedTheme = await AsyncStorage.getItem('isDarkTheme');
+        setIsDarkTheme(savedTheme === 'true');
+      } catch (error) {
+        console.error('Failed to load theme:', error);
+      }
+    };
+
+    loadTheme();
+    fetchMentors();
+  }, [filters]);
 
   const fetchMentors = async () => {
     setLoading(true);
@@ -22,19 +39,15 @@ const Home = () => {
     }
   };
 
-  // Handle filter change
   const handleFilterChange = (field, value) => {
     setFilters(prevFilters => ({ ...prevFilters, [field]: value }));
   };
 
-  // Handle mentor selection
   const handleMentorSelect = (mentor) => {
     setSelectedMentor(mentor);
-    // Navigate to MentorProfilePage or handle the booking
     navigation.navigate('MentorProfile', { mentorId: mentor.id });
   };
 
-  // Handle session booking
   const handleBookSession = async () => {
     if (selectedMentor) {
       try {
@@ -49,21 +62,17 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    fetchMentors();
-  }, [filters]);
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Find a Mentor</Text>
+    <View style={[styles.container, isDarkTheme && styles.darkContainer]}>
+      <Text style={[styles.title, isDarkTheme && styles.darkTitle]}>Find a Mentor</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, isDarkTheme && styles.darkInput]}
         placeholder="Field"
         value={filters.field}
         onChangeText={(text) => handleFilterChange('field', text)}
       />
       <TextInput
-        style={styles.input}
+        style={[styles.input, isDarkTheme && styles.darkInput]}
         placeholder="Experience (years)"
         keyboardType="numeric"
         value={filters.experience}
@@ -78,10 +87,10 @@ const Home = () => {
           data={mentors}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <View style={styles.mentorCard}>
-              <Text style={styles.mentorName}>{item.name}</Text>
-              <Text>Field: {item.field}</Text>
-              <Text>Experience: {item.experience} years</Text>
+            <View style={[styles.mentorCard, isDarkTheme && styles.darkMentorCard]}>
+              <Text style={[styles.mentorName, isDarkTheme && styles.darkMentorName]}>{item.name}</Text>
+              <Text style={isDarkTheme && styles.darkText}>Field: {item.field}</Text>
+              <Text style={isDarkTheme && styles.darkText}>Experience: {item.experience} years</Text>
               <Button title="Select" color={"#30e3ca"} onPress={() => handleMentorSelect(item)} />
             </View>
           )}
@@ -89,8 +98,10 @@ const Home = () => {
       )}
 
       {selectedMentor && (
-        <View style={styles.bookingSection}>
-          <Text style={styles.bookingTitle}>Book a Session with {selectedMentor.name}</Text>
+        <View style={[styles.bookingSection, isDarkTheme && styles.darkBookingSection]}>
+          <Text style={[styles.bookingTitle, isDarkTheme && styles.darkBookingTitle]}>
+            Book a Session with {selectedMentor.name}
+          </Text>
           <Button title="Book Session" onPress={handleBookSession} />
         </View>
       )}
@@ -103,13 +114,16 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  Button:{
-    color:"#30e3ca",
+  darkContainer: {
+    backgroundColor: '#333',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
+  },
+  darkTitle: {
+    color: '#fff',
   },
   input: {
     height: 40,
@@ -118,22 +132,42 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     paddingHorizontal: 8,
   },
+  darkInput: {
+    backgroundColor: '#555',
+    color: '#fff',
+  },
   mentorCard: {
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
   },
+  darkMentorCard: {
+    backgroundColor: '#444',
+    borderColor: '#555',
+  },
   mentorName: {
     fontSize: 18,
     fontWeight: 'bold',
   },
+  darkMentorName: {
+    color: '#fff',
+  },
+  darkText: {
+    color: '#ccc',
+  },
   bookingSection: {
     marginTop: 16,
+  },
+  darkBookingSection: {
+    backgroundColor: '#444',
   },
   bookingTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 8,
+  },
+  darkBookingTitle: {
+    color: '#fff',
   },
 });
 

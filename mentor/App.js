@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import PreSignInChoiceScreen from './screens/PreSignInChoiceScreen';
-import StudentSetupScreen from './screens/StudentSetupScreen';
-import MentorSetupScreen from './screens/MentorSetupScreen';
+import PreSignInChoiceScreen from './screens/PreSignInChoiceScreen'
 import StudentProfile from './screens/StudentProfile';
 import MentorProfile from './screens/MentorProfile';
 import { auth, db } from './utils/firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
-import SignInScreen from './screens/SigninScreen';
+import Appij from './Appij';
 
 const Stack = createStackNavigator();
 
@@ -38,20 +36,17 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
         {!user ? (
-          <Stack.Screen name="PreSignIn" component={SignInScreen} />
+          <Appij/>
         ) : userType === null ? (
           <>
-            <Stack.Screen name="StudentSetup" component={StudentSetupScreen} />
-            <Stack.Screen name="MentorSetup" component={MentorSetupScreen} />
+            <PreSignInChoiceScreen/>
           </>
         ) : userType === 'student' ? (
-          <Stack.Screen name="StudentProfile" component={StudentProfile} initialParams={{ user }} />
+          <StudentProfile/>
         ) : (
-          <Stack.Screen name="MentorProfile" component={MentorProfile} initialParams={{ user }} />
+          <MentorProfile/>
         )}
-      </Stack.Navigator>
     </NavigationContainer>
   );
 };

@@ -1,22 +1,28 @@
-// StudentProfile.js
 import React from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Button } from 'react-native';
+import { useTheme } from '../components/ThemeContext'; 
 
 const StudentProfile = () => {
+  const { isDarkTheme } = useTheme(); 
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: isDarkTheme ? '#333' : '#fff' }]}>
       <View style={styles.profileContainer}>
         <Image
           source={{ uri: 'https://via.placeholder.com/150' }} // Replace with student's image URL
           style={styles.profileImage}
         />
-        <Text style={styles.name}>Jane Smith</Text>
-        <Text style={styles.year}>Year: 2nd Year, B.Tech</Text>
-        <Text style={styles.interests}>Interests: AI, Web Development</Text>
-        <Text style={styles.goals}>
+        <Text style={[styles.name, { color: isDarkTheme ? '#fff' : '#000' }]}>Jane Smith</Text>
+        <Text style={[styles.year, { color: isDarkTheme ? '#ccc' : '#000' }]}>Year: 2nd Year, B.Tech</Text>
+        <Text style={[styles.interests, { color: isDarkTheme ? '#ccc' : '#000' }]}>Interests: AI, Web Development</Text>
+        <Text style={[styles.goals, { color: isDarkTheme ? '#ccc' : '#000' }]}>
           Aspiring to become a full-stack developer with a focus on AI-driven applications.
         </Text>
-        <Button title="Connect with a Mentor" onPress={() => {}} />
+        <Button 
+          title="Connect with a Mentor" 
+          color={isDarkTheme ? '#30e3ca' : '#007bff'} // Adjust color based on theme
+          onPress={() => {}}
+        />
       </View>
     </ScrollView>
   );
@@ -26,7 +32,6 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
-    backgroundColor: '#fff',
   },
   profileContainer: {
     alignItems: 'center',
@@ -37,9 +42,6 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 75,
     marginBottom: 20,
-  },
-  Button:{
-    color:"#30e3ca",
   },
   name: {
     fontSize: 24,

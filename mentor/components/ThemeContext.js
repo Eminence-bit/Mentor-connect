@@ -1,5 +1,6 @@
+// ThemeContext.js
 import React, { createContext, useState, useEffect } from 'react';
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const ThemeContext = createContext();
 
@@ -19,18 +20,8 @@ export const ThemeProvider = ({ children }) => {
     loadTheme();
   }, []);
 
-  const toggleTheme = async () => {
-    const newTheme = !isDarkTheme;
-    setIsDarkTheme(newTheme);
-    try {
-      await AsyncStorage.setItem('isDarkTheme', newTheme.toString());
-    } catch (error) {
-      console.error('Failed to save theme preference:', error);
-    }
-  };
-
   return (
-    <ThemeContext.Provider value={{ isDarkTheme, toggleTheme }}>
+    <ThemeContext.Provider value={{ isDarkTheme, setIsDarkTheme }}>
       {children}
     </ThemeContext.Provider>
   );

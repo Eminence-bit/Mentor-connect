@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Switch, Alert } from 'react-native';
 import { auth } from '../utils/firebaseConfig';
-import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Settings = ({ navigation }) => {
   const [displayName, setDisplayName] = useState(auth.currentUser?.displayName || '');
@@ -24,9 +24,7 @@ const Settings = ({ navigation }) => {
     try {
       const user = auth.currentUser;
       if (user) {
-        await user.updateProfile({
-          displayName,
-        });
+        await user.updateProfile({ displayName });
         Alert.alert('Success', 'Profile updated successfully');
       }
     } catch (error) {
@@ -38,7 +36,6 @@ const Settings = ({ navigation }) => {
     setIsDarkTheme(value);
     try {
       await AsyncStorage.setItem('isDarkTheme', value.toString());
-       
     } catch (error) {
       console.error('Failed to save theme preference:', error);
     }
@@ -47,7 +44,7 @@ const Settings = ({ navigation }) => {
   const handleLogout = () => {
     auth.signOut()
       .then(() => {
-        navigation.navigate('SignIn'); // Navigate to SignIn screen after logging out
+        navigation.navigate('SignInScreen'); // Navigate to the SignIn screen
       })
       .catch((error) => {
         Alert.alert('Error', error.message);
@@ -75,7 +72,7 @@ const Settings = ({ navigation }) => {
         />
       </View>
 
-      <Button  color={"#30e3ca"} title="Logout" onPress={handleLogout} />
+      <Button color={"#30e3ca"} title="Logout" onPress={handleLogout} />
     </View>
   );
 };

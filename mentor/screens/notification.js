@@ -1,9 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Notification = () => {
-  // Sample notification data
-  const [notifications, setNotifications] = useState([
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+
+  useEffect(() => {
+    const loadTheme = async () => {
+      try {
+        const savedTheme = await AsyncStorage.getItem('isDarkTheme');
+        setIsDarkTheme(savedTheme === 'true');
+      } catch (error) {
+        console.error('Failed to load theme:', error);
+      }
+    };
+
+    loadTheme();
+  }, []);
+
+  const renderItem = ({ item }) => (
+    <View style={[styles.notificationContainer, isDarkTheme && styles.darknotificationContainer]}>
+      <Text style={[styles.notificationTitle, isDarkTheme && styles.darknotificationTitle]}>{item.title}</Text>
+      <Text style={[styles.notificationContent, isDarkTheme && styles.darknotificationContent]}>{item.content}</Text>
+      <Text style={[styles.notificationTime, isDarkTheme && styles.darknotificationTime]}>{item.time}</Text>
+    </View>
+  );
+
+  const [notifications] = useState([
     {
       id: '1',
       type: 'message',
@@ -34,17 +57,9 @@ const Notification = () => {
     },
   ]);
 
-  const renderItem = ({ item }) => (
-    <View style={styles.notificationContainer}>
-      <Text style={styles.notificationTitle}>{item.title}</Text>
-      <Text style={styles.notificationContent}>{item.content}</Text>
-      <Text style={styles.notificationTime}>{item.time}</Text>
-    </View>
-  );
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Notifications</Text>
+    <View style={[styles.container, isDarkTheme && styles.darkContainer]}>
+      <Text style={[styles.header, isDarkTheme && styles.darkheader]}>Notifications</Text>
       <FlatList
         data={notifications}
         renderItem={renderItem}
@@ -59,7 +74,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f9f9f9',
+  },
+  darkContainer: {
+    backgroundColor: '#333',
+  },
+  darkheader: {
+    color: '#fff',
   },
   header: {
     fontSize: 24,
@@ -71,7 +91,6 @@ const styles = StyleSheet.create({
   },
   notificationContainer: {
     padding: 15,
-    backgroundColor: '#fff',
     borderRadius: 8,
     marginBottom: 15,
     shadowColor: '#000',
@@ -80,18 +99,28 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
+  darknotificationContainer: {
+    backgroundColor: '#444',
+  },
   notificationTitle: {
     fontSize: 18,
     fontWeight: '600',
   },
+  darknotificationTitle: {
+    color: '#fff',
+  },
   notificationContent: {
     fontSize: 16,
-    color: '#666',
     marginVertical: 5,
+  },
+  darknotificationContent: {
+    color: '#fff',
   },
   notificationTime: {
     fontSize: 14,
-    color: '#aaa',
+  },
+  darknotificationTime: {
+    color: '#bbb',
   },
 });
 
